@@ -8,8 +8,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class Connection {
-    public static void main(String[] args) {
 
+    public static Currency obtenerTasasConversion() {
         try {
             Dotenv dotenv = Dotenv.configure().load();
             String apiKey = dotenv.get("API_KEY");
@@ -25,10 +25,18 @@ public class Connection {
 
             String json = response.body();
 
-            Currency currency = new Gson().fromJson(json, Currency.class);
-            System.out.println(currency);
+            return new Gson().fromJson(json, Currency.class);
         } catch (Exception e) {
-            System.out.println("Invalid URL");
+            System.out.println("Error al obtener las tasas de conversión: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        Currency currency = obtenerTasasConversion();
+        if (currency != null) {
+            System.out.println("Tasas de conversión disponibles:");
+            System.out.println(currency);
         }
     }
 }
